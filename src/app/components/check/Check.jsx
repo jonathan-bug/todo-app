@@ -3,9 +3,13 @@
 import styles from "@/app/components/check/component.module.css";
 import { useEffect, useState } from "react";
 
-export default function Check({values, changeValues, value, check}) {
+export default function Check({values, changeValues, value, check, setCheck, repaint}) {
     const [checked, setChecked] = useState(false);
     const [image, setImage] = useState("");
+
+    useEffect(() => {
+        setChecked(false);
+    }, [repaint])
 
     useEffect(() => {
         changeValues({...values, repeat: checked});
@@ -18,13 +22,15 @@ export default function Check({values, changeValues, value, check}) {
             setImage("");
         }
     }, [checked]);
-
+    
     useEffect(() => {
         setChecked(check)
     }, [check]);
     
     return (
-        <div className={styles.check} onClick={() => setChecked(!checked)}>
+        <div className={styles.check} onClick={() => {
+            setChecked(!checked)
+        }}>
             <img src={image}/>
         </div>
     )

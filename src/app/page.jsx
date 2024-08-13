@@ -41,7 +41,7 @@ export default function Page() {
     return (
         <div className={styles.layout}>
             <div className={layoutLeftStyle}>
-                <Form jobs={jobs} setJobs={setJobs} values={job} setValues={setJob} check={check}/>
+                <Form jobs={jobs} setJobs={setJobs} values={job} setValues={setJob} check={check} setCheck={setCheck}/>
             </div>
             <div className={styles.layout__right}>
                 <div className="grid-container">

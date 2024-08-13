@@ -5,8 +5,9 @@ import Check from "@/app/components/check/Check";
 import { useState, useRef } from "react";
 import axios from "axios";
 
-export default function Form({jobs, setJobs, values, setValues, check}) {
+export default function Form({jobs, setJobs, values, setValues, check, setCheck}) {
     const priorityRef = useRef(null);
+    const [repaint, setRepaint] = useState(false);
     const priorityOptions = [
         "A",
         "B",
@@ -40,7 +41,7 @@ export default function Form({jobs, setJobs, values, setValues, check}) {
             </div>
             <div className={styles.form__group}>
                 <label className={styles.form__label}>Repeat</label>
-                <Check values={values} changeValues={setValues} value={values.repeat} check={check}/>
+                <Check values={values} changeValues={setValues} value={values.repeat} check={check} setCheck={setCheck} repaint={repaint}/>
             </div>
             <div className={styles.form__group}>
                 <div className={styles.form__group_button}>
@@ -53,21 +54,47 @@ export default function Form({jobs, setJobs, values, setValues, check}) {
 
                                 console.log(value)
 
-                                const res = await axios.post("/api/tasks", value);
+                                if(!value.id) {
+                                    const res = await axios.post("/api/tasks", value);
 
-                                if(!res.data.err) {
-                                    setJobs([...jobs, {
-                                        ...value,
-                                        id: res.data.id
-                                    }]);
-                                    setValues({
-                                        title: "",
-                                        priority: "",
-                                        until: "",
-                                        repeat: false
-                                    });
+                                    if(!res.data.err) {
+                                        setJobs([...jobs, {
+                                            ...value,
+                                            id: res.data.id
+                                        }]);
+                                        setValues({
+                                            title: "",
+                                            priority: "",
+                                            until: "",
+                                            repeat: false
+                                        });
 
-                                    priorityRef.current.priority = "A";
+                                        priorityRef.current.priority = "A";
+                                    }
+                                }else {
+                                    const res = await axios.put("/api/tasks", value);
+
+                                    if(!res.data.err) {
+                                        setJobs(jobs.map(job => {
+                                            if(job.id == value.id) {
+                                                return value;
+                                            }else {
+                                                return job;
+                                            }
+                                        }));
+
+                                        setCheck(false);
+                                        setRepaint(!repaint);
+                                        setValues({
+                                            id: null,
+                                            title: "",
+                                            priority: "",
+                                            until: "",
+                                            repeat: false
+                                        });
+
+                                        priorityRef.current.priority = "A";
+                                    }
                                 }
                             }}
                     >Save</button>
