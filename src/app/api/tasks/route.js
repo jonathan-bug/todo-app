@@ -4,7 +4,7 @@ import pool from "@/lib/db";
 export async function GET() {
     try {
         const client = await pool.connect();
-        const { rows } = await client.query("SELECT * FROM tasks");
+        const { rows } = await client.query("SELECT id, title, priority, to_char(until, 'yyyy-MM-DD') as until, repeat FROM tasks");
         
         client.release();
 

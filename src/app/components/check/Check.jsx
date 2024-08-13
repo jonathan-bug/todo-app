@@ -3,7 +3,7 @@
 import styles from "@/app/components/check/component.module.css";
 import { useEffect, useState } from "react";
 
-export default function Check({values, changeValues}) {
+export default function Check({values, changeValues, value, check}) {
     const [checked, setChecked] = useState(false);
     const [image, setImage] = useState("");
 
@@ -18,6 +18,10 @@ export default function Check({values, changeValues}) {
             setImage("");
         }
     }, [checked]);
+
+    useEffect(() => {
+        setChecked(check)
+    }, [check]);
     
     return (
         <div className={styles.check} onClick={() => setChecked(!checked)}>

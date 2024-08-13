@@ -5,7 +5,7 @@ import Check from "@/app/components/check/Check";
 import { useState, useRef } from "react";
 import axios from "axios";
 
-export default function Form({jobs, setJobs, values, setValues}) {
+export default function Form({jobs, setJobs, values, setValues, check}) {
     const priorityRef = useRef(null);
     const priorityOptions = [
         "A",
@@ -13,7 +13,7 @@ export default function Form({jobs, setJobs, values, setValues}) {
         "C",
         "D"
     ];
-
+    
     return (
         <div className={styles.form}>
             <div className={styles.form__group}>
@@ -40,7 +40,7 @@ export default function Form({jobs, setJobs, values, setValues}) {
             </div>
             <div className={styles.form__group}>
                 <label className={styles.form__label}>Repeat</label>
-                <Check values={values} changeValues={setValues}/>
+                <Check values={values} changeValues={setValues} value={values.repeat} check={check}/>
             </div>
             <div className={styles.form__group}>
                 <div className={styles.form__group_button}>
