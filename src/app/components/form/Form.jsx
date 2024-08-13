@@ -52,10 +52,12 @@ export default function Form({jobs, setJobs, values, setValues, check, setCheck}
                                     priority: priorityRef.current.value
                                 }
 
-                                console.log(value)
-
                                 if(!value.id) {
-                                    const res = await axios.post("/api/tasks", value);
+                                    const res = await axios.post("/api/tasks", value, {
+                                        headers: {
+                                            Authorization: "Bearer " + localStorage.getItem("token")
+                                        }
+                                    });
 
                                     if(!res.data.err) {
                                         setJobs([...jobs, {
@@ -72,7 +74,11 @@ export default function Form({jobs, setJobs, values, setValues, check, setCheck}
                                         priorityRef.current.priority = "A";
                                     }
                                 }else {
-                                    const res = await axios.put("/api/tasks", value);
+                                    const res = await axios.put("/api/tasks", value, {
+                                        headers: {
+                                            Authorization: "Bearer " + localStorage.getItem("token")
+                                        }
+                                    });
 
                                     if(!res.data.err) {
                                         setJobs(jobs.map(job => {

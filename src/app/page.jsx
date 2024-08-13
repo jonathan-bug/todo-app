@@ -5,19 +5,31 @@ import Form from "./components/form/Form";
 import Card from "@/app/components/card/Card";
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
+export async function auth(router) {
+    const token = localStorage.getItem("token");
+    const res = await axios.post("/api/auth", {}, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+
+    const token_ = await res.data.token
+    if(token_ == null) {
+        router.replace("/login")
+    }else {
+        localStorage.setItem("token", token_)
+    }
+}
 
 export default function Page() {
-    function convertDate(date) {
-        let year = date.getFullYear().toString();
-        let month = date.getMonth().toString();
-        let day = date.getDay().toString();
-
-        day = (day.length == 1)? "0" + day: day;
-        month = (month.length == 1)? "0" + month: month;
-
-        return `${year}-${month}-${day}`;
-    }
+    const router = useRouter()
     
+    useEffect(() => {
+        auth(router)
+    }, [])
+        
     const toggleLeft = useRef(false);
     const [check, setCheck] = useState(false);
     const [layoutLeftStyle, setLayoutLeftStyle] = useState(`${styles.layout__left}`);
@@ -32,12 +44,17 @@ export default function Page() {
 
     useEffect(() => {
         (async () => {
-            const res = await axios.get("/api/tasks");
+            const token = localStorage.getItem("token");
+            const res = await axios.get("/api/tasks", {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
 
             setJobs(await res.data);
         })();
     }, []);
-
+    
     return (
         <div className={styles.layout}>
             <div className={layoutLeftStyle}>

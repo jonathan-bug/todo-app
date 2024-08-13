@@ -2,17 +2,6 @@ import styles from "@/app/components/card/component.module.css";
 import axios from "axios";
 
 export default function Card({setCheck, setJob, values, setValues, id, title, priority, until, repeat}) {
-    function convertDate(date) {
-        let year = date.getFullYear().toString();
-        let month = date.getMonth().toString();
-        let day = date.getDay().toString();
-
-        day = (day.length == 1)? "0" + day: day;
-        month = (month.length == 1)? "0" + month: month;
-
-        return `${year}-${month}-${day}`;
-    }
-
     return (
         <div className={styles.card}>
             <div className={styles.card__left}>
@@ -41,7 +30,11 @@ export default function Card({setCheck, setJob, values, setValues, id, title, pr
                 </button>
                 <button className={styles.card__button}
                         onClick={async () => {
-                            const res = await axios.delete(`/api/tasks/${id}`);
+                            const res = await axios.delete(`/api/tasks/${id}`, {}, {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("token")
+                                }
+                            });
 
                             if(!res.data.err) {
                                 setValues(values.filter(value => value.id != id));
