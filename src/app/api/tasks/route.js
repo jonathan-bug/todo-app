@@ -7,7 +7,7 @@ export async function GET() {
         const { rows } = await client.query("SELECT * FROM tasks");
         
         client.release();
-        
+
         return NextResponse.json(rows);
     }catch {
         return NextResponse.json({err: 1});
@@ -18,21 +18,13 @@ export async function POST(request) {
     try {
         const values = await request.json();
         const client = await pool.connect();
-        await client.query(
-            `INSERT INTO tasks(title, priority, until, repeat) VALUES('${values.title}', '${values.priority}', '${values.until}', ${values.repeat})`);
+        const { rows } = await client.query(
+            `INSERT INTO tasks(title, priority, until, repeat) VALUES('${values.title}', '${values.priority}', '${values.until}', ${values.repeat}) RETURNING id`);
 
         client.release();
         
-        return NextResponse.json({});
+        return NextResponse.json({id: rows[0].id});
     }catch (err){
-        return NextResponse.json({err: 1});
-    }
-}
-
-export async function DELETE(request) {
-    try {
-
-    }catch {
         return NextResponse.json({err: 1});
     }
 }

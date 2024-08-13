@@ -8,6 +8,7 @@
 .layout__left {
     box-sizing: border-box;
     flex-basis: 20px;
+    flex-shrink: 0;
     overflow: hidden;
     visibility: hidden;
 }
@@ -57,4 +58,21 @@
     background-color: #ffffff;
     border: 1px solid var(--primary-color-hover);
     color: var(--primary-color-hover);
+}
+
+@media screen and (width < 650px) {
+    .layout__left {
+        position: fixed;
+        width: 100%;
+        padding-top: 72px;
+    }
+
+    .layout__right {
+        margin-left: 20px;
+    }
+
+    .button_container {
+        position: sticky;
+        top: 0px;
+    }
 }
