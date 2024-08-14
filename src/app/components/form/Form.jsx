@@ -51,7 +51,7 @@ export default function Form({jobs, setJobs, values, setValues, check, setCheck}
                                     ...values,
                                     priority: priorityRef.current.value
                                 }
-
+                                
                                 if(!value.id) {
                                     const res = await axios.post("/api/tasks", value, {
                                         headers: {

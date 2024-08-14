@@ -68,3 +68,9 @@
     border: 1px solid var(--primary-color-hover);
     color: var(--primary-color-hover);
 }
+
+.form__title {
+    text-align: center;
+    width: 100%;
+    color: #747474;
+}

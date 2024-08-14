@@ -13,47 +13,57 @@ export default function Page() {
         password: ""
     });
     
-    if(localStorage.getItem("token") != null) {
-        router.push("/");
-    }
-    
     return (
+        
         <div className={styles.container}>
-            <div className={`${styles2.form} ${styles.form_}`}>
-                <div className={styles2.form__group}>
-                    <label className={styles2.form__label}>User</label>
-                    <input className={styles2.form__input} name="" type="text"
-                           onChange={event => {
-                               setUser({...user, username: event.target.value});
-                           }}
-                           value={user.username}
-                    />
-                </div>
-                <div className={styles2.form__group}>
-                    <label className={styles2.form__label}>Password</label>
-                    <input className={styles2.form__input} name="" type="password"
-                           onChange={event => {
-                               setUser({...user, password: event.target.value});
-                           }}
-                           value={user.password}
-                    />
-                </div>
-                
-                <div className={styles2.form__group}>
-                    <div className={styles2.form__group_button}>
-                        <button className={styles2.form__button} onClick={async () => {
-                            const res = await axios.post("/api/login", user);
+            <form>
+                <div className={`${styles2.form} ${styles.form_}`}>
+                    <div className={styles2.form__group}>
+                        <h1 className={styles2.form__title}>
+                            Login
+                        </h1>
+                    </div>
+                    <div className={styles2.form__group}>
+                        <label className={styles2.form__label}>Username</label>
+                        <input className={styles2.form__input} name="" type="text"
+                               onChange={event => {
+                                   setUser({...user, username: event.target.value});
+                               }}
+                               value={user.username}
+                               autoComplete="username"
+                               placeholder="Enter your username"
+                        />
+                    </div>
+                    <div className={styles2.form__group}>
+                        <label className={styles2.form__label}>Password</label>
+                        <input className={styles2.form__input} type="password"
+                               onChange={event => {
+                                   setUser({...user, password: event.target.value});
+                               }}
+                               value={user.password}
+                               autoComplete="new-password"
+                               name="password"
+                               placeholder="Enter your password"
+                        />
+                    </div>
+                    
+                    <div className={styles2.form__group}>
+                        <div className={styles2.form__group_button}>
+                            <button className={styles2.form__button} onClick={async event => {
+                                event.preventDefault()
+                                const res = await axios.post("/api/login", user);
 
-                            const authUser = res.data;
-                            
-                            if(authUser.token != null) {
-                                localStorage.setItem("token", authUser.token);
-                                router.push("/");
-                            }
-                        }}>Login</button>
+                                const authUser = res.data;
+                                
+                                if(authUser.token != null) {
+                                    localStorage.setItem("token", authUser.token);
+                                    router.push("/");
+                                }
+                            }}>Login</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

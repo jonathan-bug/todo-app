@@ -7,7 +7,11 @@ export async function POST() {
         const token = headers().get("authorization").split(" ")[1]
         const jwt = await decrypt(token)
 
-        return NextResponse.json({token: await encrypt(jwt)})
+        if(jwt.exp > Date.now()) {
+            return NextResponse.json({token: null})
+        }else {
+            return NextResponse.json({token: await encrypt(jwt)})
+        }
     }catch (err){
         return NextResponse.json({token: null})
     }

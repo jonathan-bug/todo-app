@@ -44,13 +44,16 @@ export default function Page() {
         (async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await axios.get("/api/tasks", {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                });
 
-                setJobs(await res.data);
+                if(token != null) {
+                    const res = await axios.get("/api/tasks", {
+                        headers: {
+                            Authorization: "Bearer " + token
+                        }
+                    });
+
+                    setJobs(await res.data);
+                }
             }catch {
                 
             }
