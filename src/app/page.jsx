@@ -7,6 +7,7 @@ import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+// auth the token
 export async function auth(router) {
     const token = localStorage.getItem("token");
     const res = await axios.post("/api/auth", {}, {
@@ -17,7 +18,7 @@ export async function auth(router) {
 
     const token_ = await res.data.token
     if(token_ == null) {
-        router.replace("/login")
+        router.push("/login")
     }else {
         localStorage.setItem("token", token_)
     }
@@ -25,11 +26,8 @@ export async function auth(router) {
 
 export default function Page() {
     const router = useRouter()
+    auth(router)
     
-    useEffect(() => {
-        auth(router)
-    }, [])
-        
     const toggleLeft = useRef(false);
     const [check, setCheck] = useState(false);
     const [layoutLeftStyle, setLayoutLeftStyle] = useState(`${styles.layout__left}`);
@@ -44,14 +42,18 @@ export default function Page() {
 
     useEffect(() => {
         (async () => {
-            const token = localStorage.getItem("token");
-            const res = await axios.get("/api/tasks", {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            });
+            try {
+                const token = localStorage.getItem("token");
+                const res = await axios.get("/api/tasks", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
 
-            setJobs(await res.data);
+                setJobs(await res.data);
+            }catch {
+                
+            }
         })();
     }, []);
     
@@ -65,7 +67,12 @@ export default function Page() {
                     <div className="grid-x">
                         <div className="grid-y">
                             <div className={styles.button_container}>
-                                <button className={`${styles.icon_button} ${styles.icon_button__title}`}>
+                                <button className={`${styles.icon_button} ${styles.icon_button__title}`}
+                                        onClick={() => {
+                                            localStorage.removeItem("token");
+                                            router.push("/login");
+                                        }}
+                                >
                                     Logout
                                 </button>
                                 <button className={styles.icon_button} onClick={() => {
@@ -97,7 +104,6 @@ export default function Page() {
                                 repeat={(job.repeat)? "Yes": "No"}
                             />
                         </div>)}
-                        
                     </div>
                 </div>
             </div>

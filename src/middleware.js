@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
-import { decrypt, encrypt } from "@/lib/auth";
+import { decrypt } from "@/lib/auth";
 import { headers } from "next/headers";
 
 // this is for server side auth, middlewares works on the server side :(
-// protecting api
+// API auth
 export async function middleware(req) {
+    // try to decrypt the token
     try {
-        const token = headers().get("authorization").split(" ")[1]
-        await decrypt(token)
+        const token = headers().get("authorization").split(" ")[1];
+        // decrypt the token
+        await decrypt(token);
 
-        return NextResponse.rewrite(new URL(req.url))
+        // if the token can be decrypted then continue with the request
+        return NextResponse.rewrite(new URL(req.url));
     }catch(err) {
-        console.log(err.message)
-        const url = req.nextUrl.clone();
-        url.pathname = "/login";
-        return NextResponse.redirect(url)
+        // if cant decrypt the token then return an error 
+        return NextResponse.json({error: ""},{status: 404});
     }
 }
 

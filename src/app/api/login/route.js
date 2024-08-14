@@ -1,6 +1,5 @@
-import { encrypt, decrypt } from "@/lib/auth";
+import { encrypt } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 
 export async function POST(request) {
     const user = await request.json()
@@ -13,4 +12,3 @@ export async function POST(request) {
         return NextResponse.json({token: null})
     }
 }
-
