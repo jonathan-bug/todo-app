@@ -4,11 +4,11 @@
     --primary-color: #60c4ae;
     --primary-color-hover: #9de39d;
 }
-
 body {
     background-color: #f9f9f9;
     font-size: 16px;
     height: 100vh;
+    
 }
 
 
