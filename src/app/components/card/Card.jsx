@@ -1,7 +1,72 @@
 import styles from "@/app/components/card/component.module.css";
 import axios from "axios";
+import { useContext } from "react";
+import { Main } from "@/app/page";
 
-export default function Card({setCheck, setJob, values, setValues, id, title, priority, until, repeat}) {
+export default function Card({id, title, priority, until, repeat}) {
+    const main = useContext(Main);
+
+    async function deleteTodo(id) {
+        try {
+            const response = await axios.delete("/api/tasks/" + id, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            })
+
+            if(response.data.error == null) {
+                main.setTodos(main.todos.filter(todo => todo.id != id));
+            }
+        }catch {
+            
+        }
+    }
+
+    async function doneTodo() {
+        try {
+            if(repeat) {
+                const newDate = new Date(until.replace("-", "/"));
+                newDate.setDate(newDate.getDate() + 1);
+                
+                const todo = {
+                    id,
+                    title,
+                    priority,
+                    until: newDate.toISOString().split("T")[0],
+                    repeat
+                };
+                
+                const response = await axios.put("/api/tasks", todo, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
+
+                if(response.data.err == null) {
+                    main.setTodos(main.todos.map(todo_ => {
+                        if(todo_.id == todo.id) {
+                            return todo;
+                        }else {
+                            return todo_;
+                        }
+                    }));
+                }
+            }else {
+                const response = await axios.delete(`/api/tasks/${id}`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if(response.data.err == null) {
+                    main.setTodos(main.todos.filter(todo => todo.id != id));
+                }
+            }
+        }catch {
+            
+        }
+    }
+    
     return (
         <div className={styles.card}>
             <div className={styles.card__left}>
@@ -9,90 +74,28 @@ export default function Card({setCheck, setJob, values, setValues, id, title, pr
                 <div className={styles.card__content}>
                     <div className={styles.card__value}>Priority {priority}</div>
                     <div className={styles.card__value}>Until {until}</div>
-                    <div className={styles.card__value}>Repeat {repeat}</div>
+                    <div className={styles.card__value}>Repeat {(repeat)? "Yes": "No"}</div>
                 </div>
             </div>
             
             <div className={styles.card__right}>
                 <button className={styles.card__button}
-                        onClick={async () => {
-                            if(repeat == "Yes") {
-                                const untilDate = new Date(until.replace("-", "/"));
-                                untilDate.setDate(untilDate.getDate() + 1)
-                                const stringDate = untilDate.toISOString()
-                                
-                                try {
-                                    const task = {
-                                        id,
-                                        title,
-                                        priority,
-                                        until: stringDate.split("T")[0],
-                                        repeat: true
-                                    }
-                                    
-                                    const res = await axios.put("/api/tasks", task, {
-                                        headers: {
-                                            Authorization: "Bearer " + localStorage.getItem("token")
-                                        }
-                                    })
-
-                                    if(!res.data.err) {
-                                        setValues(values.filter(value => value.id != id));
-                                        setValues(values.map(value => {
-                                            if(value.id == task.id) {
-                                                return task
-                                            }else {
-                                                return value
-                                            }
-                                        }))
-                                    }
-                                }catch {}
-                            }else {
-                                try {
-                                    const res = await axios.delete(`/api/tasks/${id}`, {
-                                        headers: {
-                                            Authorization: "Bearer " + localStorage.getItem("token")
-                                        }
-                                    });
-
-                                    if(!res.data.err) {
-                                        setValues(values.filter(value => value.id != id));
-                                    }
-                                }catch {}
-                            }
-                        }}
-                >
+                        onClick={doneTodo}>
                     <img alt="" src="/bx-check-2.svg"/>
                 </button>
                 <button className={styles.card__button} onClick={() => {
-                    setCheck((repeat == "Yes")? true: false)
-                    setJob({
+                    main.setTodo({
                         id,
                         title,
                         priority,
                         until,
-                        repeat: (repeat == "Yes")? true: false
+                        repeat
                     });
                 }}>
                     <img alt="" src="/bx-pencil.svg"/>
                 </button>
-                <button className={styles.card__button}
-                        onClick={async () => {
-                            try {
-                                const res = await axios.delete(`/api/tasks/${id}`, {
-                                    headers: {
-                                        Authorization: "Bearer " + localStorage.getItem("token")
-                                    }
-                                });
-
-                                if(!res.data.err) {
-                                    setValues(values.filter(value => value.id != id));
-                                }
-                            }catch (err){
-                                console.log(err.message)
-                            }
-                        }}
-                >
+                
+                <button className={styles.card__button} onClick={() => deleteTodo(id)}>
                     <img alt="" src="/bx-trash.svg"/>
                 </button>
             </div>

@@ -3,9 +3,10 @@
 import styles from "@/app/page.module.css";
 import Form from "./components/form/Form";
 import Card from "@/app/components/card/Card";
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
 
 // auth the token
 export async function auth(router) {
@@ -24,7 +25,42 @@ export async function auth(router) {
     }
 }
 
+export const Main = createContext(null);
+
 export default function Page() {
+    const [todos, setTodos] = useState([]);
+    const [todo, setTodo] = useState({
+        id: "",
+        title: "",
+        priority: "A",
+        until: "",
+        repeat: false
+    })
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await axios.get("/api/tasks", {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if(await response.error == null) {
+                    setTodos(await response.data);
+                }
+            }catch {
+                
+            }
+        })();
+    }, []);
+
+    
+
+
+
+
+    
     const router = useRouter()
     auth(router)
     
@@ -61,55 +97,55 @@ export default function Page() {
     }, []);
     
     return (
-        <div className={styles.layout}>
-            <div className={layoutLeftStyle}>
-                <Form jobs={jobs} setJobs={setJobs} values={job} setValues={setJob} check={check} setCheck={setCheck}/>
-            </div>
-            <div className={styles.layout__right}>
-                <div className="grid-container">
-                    <div className="grid-x">
-                        <div className="grid-y">
-                            <div className={styles.button_container}>
-                                <button className={`${styles.icon_button} ${styles.icon_button__title}`}
-                                        onClick={() => {
-                                            localStorage.removeItem("token");
-                                            router.push("/login");
-                                        }}
-                                >
-                                    Logout
-                                </button>
-                                <button className={styles.icon_button} onClick={() => {
-                                    if(toggleLeft.current) {
-                                        setLayoutLeftStyle(`${styles.layout__left}`);
-                                        setCardStyle("grid-y grid-y-xm-12 grid-y-sm-12 grid-y-md-6 grid-y-lg-4 grid-y-xl-3");
-                                    }else {
-                                        setLayoutLeftStyle(`${styles.layout__left} ${styles.layout__left__show}`);
-                                        setCardStyle("grid-y grid-y-xm-12 grid-y-sm-12 grid-y-md-12 grid-y-lg-6 grid-y-xl-4");
-                                    }
-                                    
-                                    toggleLeft.current = !toggleLeft.current;
-                                }}>
-                                    <img alt="" src="/bx-menu.svg"/>
-                                </button>
+        <Main.Provider value={{ todos, setTodos, todo, setTodo }} >
+            
+            <div className={styles.layout}>
+                <div className={layoutLeftStyle}>
+                    <Form jobs={jobs} setJobs={setJobs} values={job} setValues={setJob} check={check} setCheck={setCheck}/>
+                </div>
+                <div className={styles.layout__right}>
+                    <div className="grid-container">
+                        <div className="grid-x">
+                            <div className="grid-y">
+                                <div className={styles.button_container}>
+                                    <button className={`${styles.icon_button} ${styles.icon_button__title}`}
+                                            onClick={() => {
+                                                localStorage.removeItem("token");
+                                                router.push("/login");
+                                            }}
+                                    >
+                                        Logout
+                                    </button>
+                                    <button className={styles.icon_button} onClick={() => {
+                                        if(toggleLeft.current) {
+                                            setLayoutLeftStyle(`${styles.layout__left}`);
+                                            setCardStyle("grid-y grid-y-xm-12 grid-y-sm-12 grid-y-md-6 grid-y-lg-4 grid-y-xl-3");
+                                        }else {
+                                            setLayoutLeftStyle(`${styles.layout__left} ${styles.layout__left__show}`);
+                                            setCardStyle("grid-y grid-y-xm-12 grid-y-sm-12 grid-y-md-12 grid-y-lg-6 grid-y-xl-4");
+                                        }
+                                        
+                                        toggleLeft.current = !toggleLeft.current;
+                                    }}>
+                                        <img alt="" src="/bx-menu.svg"/>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        { jobs.map(job => <div key={job.id} className={cardStyle}>
-                            <Card
-                                setCheck={setCheck}
-                                setJob={setJob}
-                                values={jobs}
-                                setValues={setJobs}
-                                id={job.id}
-                                title={job.title}
-                                priority={job.priority}
-                                until={job.until}
-                                repeat={(job.repeat)? "Yes": "No"}
-                            />
-                        </div>)}
+                            { todos.map(todo => <div key={todo.id} className={cardStyle}>
+                                <Card
+                                    id={todo.id}
+                                    title={todo.title}
+                                    priority={todo.priority}
+                                    until={todo.until}
+                                    repeat={todo.repeat}
+                                />
+                            </div>)}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+        </Main.Provider>
     );
 }

@@ -10,7 +10,7 @@ export async function DELETE(res, { params }) {
         
         return NextResponse.json({});
     }catch {
-        return NextResponse.json({err});
+        return NextResponse.json({err: true});
     }
 }
 

@@ -10,7 +10,7 @@ export async function GET() {
 
         return NextResponse.json(rows);
     }catch {
-        return NextResponse.json({err: 1});
+        return NextResponse.json({err: true});
     }
 }
 
