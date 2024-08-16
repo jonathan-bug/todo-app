@@ -2,13 +2,11 @@
 
 import styles from "@/app/components/form/component.module.css";
 import Check from "@/app/components/check/Check";
-import { useState } from "react";
 import axios from "axios";
 import { Main } from "@/app/page";
 import { useContext } from "react";
 
-export default function Form({values, setValues, check, setCheck}) {
-    const [repaint, setRepaint] = useState(false);
+export default function Form() {
     const priorities = [
         "A",
         "B",
