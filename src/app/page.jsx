@@ -8,7 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 // auth the token
-export async function auth(router) {
+export async function auth(router, setLogged) {
     const token = localStorage.getItem("token");
     const res = await axios.post("/api/auth", {}, {
         headers: {
@@ -21,15 +21,14 @@ export async function auth(router) {
         router.push("/login")
     }else {
         localStorage.setItem("token", token_)
+        setLogged(true)
     }
 }
 
 export const Main = createContext(null);
 
 export default function Page() {
-    const router = useRouter()
-    auth(router)
-    
+    const [logged, setLogged] = useState(false);
     const [todos, setTodos] = useState([]);
     const [todo, setTodo] = useState({
         id: "",
@@ -38,6 +37,9 @@ export default function Page() {
         until: "",
         repeat: false
     })
+    
+    const router = useRouter()
+    auth(router, setLogged)
 
     useEffect(() => {
         (async () => {
@@ -61,7 +63,7 @@ export default function Page() {
     const [layoutLeftStyle, setLayoutLeftStyle] = useState(`${styles.layout__left}`);
     const [cardStyle, setCardStyle] = useState("grid-y grid-y-sm-6 grid-y-md-4 grid-y-xl-3");
 
-    if(localStorage.getItem("token")) {
+    if(logged) {
         return (
             <Main.Provider value={{ todos, setTodos, todo, setTodo }} >
                 
