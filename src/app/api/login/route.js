@@ -9,6 +9,8 @@ export async function POST(request) {
         const client = await pool.connect();
         const { rows } = (await client.query("SELECT * FROM todo_user"));
 
+        client.release()
+        
         if(rows[0].username = user.username && await bcrypt.compare(user.password, rows[0].password)) {
             const token = await encrypt(user)
             return NextResponse.json({token});
