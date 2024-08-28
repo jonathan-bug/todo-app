@@ -101,25 +101,32 @@ export default function Card({id, title, priority, until, repeat}) {
             </div>
             
             <div className={styles.card__right}>
-                <button className={styles.card__button}
-                        onClick={doneTodo}>
-                    <img alt="" src="/bx-check-2.svg"/>
-                </button>
-                <button className={styles.card__button} onClick={() => {
-                    main.setTodo({
-                        id,
-                        title,
-                        priority,
-                        until,
-                        repeat
-                    });
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    width: "100%"
                 }}>
-                    <img alt="" src="/bx-pencil.svg"/>
-                </button>
-                
-                <button className={styles.card__button} onClick={() => deleteTodo(id)}>
-                    <img alt="" src="/bx-trash.svg"/>
-                </button>
+                    <button className={styles.card__button}
+                            onClick={doneTodo}>
+                        <img alt="" src="/bx-check-2.svg"/>
+                    </button>
+                    <button className={styles.card__button} onClick={() => {
+                        main.setTodo({
+                            id,
+                            title,
+                            priority,
+                            until,
+                            repeat
+                        });
+                    }}>
+                        <img alt="" src="/bx-pencil.svg"/>
+                    </button>
+                    
+                    <button className={styles.card__button} onClick={() => deleteTodo(id)}>
+                        <img alt="" src="/bx-trash.svg"/>
+                    </button>
+                </div>
             </div>
         </div>
     )
