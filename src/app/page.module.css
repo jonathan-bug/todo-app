@@ -6,6 +6,8 @@
 }
 
 .layout__left {
+    transition-property: flex-basis;
+    transition-duration: 0.5s;
     box-sizing: border-box;
     flex-basis: 20px;
     flex-shrink: 0;
@@ -15,7 +17,7 @@
 
 .layout__left__show {
     flex-basis: 358px;
-    overflow: visible;
+    overflow: hidden;
     visibility: visible;
 }
 
