@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import styles from "@/app/components/card/component.module.css";
 import axios from "axios";
 import { useContext } from "react";
@@ -15,7 +16,14 @@ export default function Card({id, title, priority, until, repeat}) {
             })
 
             if(response.data.error == null) {
+                toast.success("Success!", {
+                    position: "top-right"
+                });
                 main.setTodos(main.todos.filter(todo => todo.id != id));
+            }else {
+                toast.error("An error has occurred!", {
+                    position: "top-right"
+                });
             }
         }catch {
             
@@ -43,6 +51,9 @@ export default function Card({id, title, priority, until, repeat}) {
                 })
 
                 if(response.data.err == null) {
+                    toast.success("Success", {
+                        position: "top-right"
+                    });
                     main.setTodos(main.todos.map(todo_ => {
                         if(todo_.id == todo.id) {
                             return todo;
@@ -50,6 +61,10 @@ export default function Card({id, title, priority, until, repeat}) {
                             return todo_;
                         }
                     }));
+                }else {
+                    toast.error("An error has occurred!", {
+                        position: "top-right"
+                    });
                 }
             }else {
                 const response = await axios.delete(`/api/tasks/${id}`, {
@@ -59,7 +74,14 @@ export default function Card({id, title, priority, until, repeat}) {
                 });
 
                 if(response.data.err == null) {
+                    toast.success("Success", {
+                        position: "top-right"
+                    });
                     main.setTodos(main.todos.filter(todo => todo.id != id));
+                }else {
+                    toast.error("An error has occurred!", {
+                        position: "top-right"
+                    });
                 }
             }
         }catch {

@@ -10,8 +10,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={sofiaSans.className}>{children}</body>
-    </html>
+      <html lang="en">
+          <body className={sofiaSans.className}>{children}</body>
+      </html>
   );
 }

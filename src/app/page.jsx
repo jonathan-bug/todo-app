@@ -1,5 +1,7 @@
 "use client";
 
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import styles from "@/app/page.module.css";
 import Form from "./components/form/Form";
 import Card from "@/app/components/card/Card";
@@ -113,7 +115,7 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                
+                <ToastContainer/>
             </Main.Provider>
         );
     }else {

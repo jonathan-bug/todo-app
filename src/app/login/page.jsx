@@ -1,5 +1,7 @@
 "use client";
 
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import styles from "@/app/login/page.module.css";
 import styles2 from "@/app/components/form/component.module.css";
 import axios from "axios";
@@ -58,12 +60,17 @@ export default function Page() {
                                 if(authUser.token != null) {
                                     localStorage.setItem("token", authUser.token);
                                     router.push("/");
+                                }else {
+                                    toast.error("Username or password incorrent", {
+                                        position: "top-right"
+                                    });
                                 }
                             }}>Login</button>
                         </div>
                     </div>
                 </div>
             </form>
+            <ToastContainer/>
         </div>
     )
 }

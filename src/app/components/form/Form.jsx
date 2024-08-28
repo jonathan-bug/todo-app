@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import styles from "@/app/components/form/component.module.css";
 import Check from "@/app/components/check/Check";
 import axios from "axios";
@@ -26,8 +27,15 @@ export default function Form() {
                 })
                 
                 if(response.data.err == null) {
+                    toast.success("Success!", {
+                        position: "top-right"
+                    })
                     main.setTodos([...main.todos, {...main.todo, id: response.data.id}]);
                     main.setTodo({id: "", title: "", priority: "A", until: "", repeat: false});
+                }else {
+                    toast.error("An error has occurred!", {
+                        position: "top-right"
+                    })
                 }
             }else {
                 const response = await axios.put("/api/tasks", main.todo, {
@@ -37,6 +45,9 @@ export default function Form() {
                 })
 
                 if(response.data.err == null) {
+                    toast.success("Success!", {
+                        position: "top-right"
+                    })
                     main.setTodos(main.todos.map(todo => {
                         if(todo.id == main.todo.id) {
                             return {...main.todo}
@@ -45,6 +56,10 @@ export default function Form() {
                         }
                     }))
                     main.setTodo({id: "", title: "", priority: "A", until: "", repeat: false});
+                }else {
+                    toast.error("An error has occurred!", {
+                        position: "top-right"
+                    })
                 }
             }
         }catch {
