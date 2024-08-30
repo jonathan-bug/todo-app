@@ -52,7 +52,7 @@ export default function Card({id, title, priority, until, repeat}) {
 
                 if(response.data.err == null) {
                     toast.success("Success", {
-                        position: "top-right"
+                        position: "bottom-right"
                     });
                     main.setTodos(main.todos.map(todo_ => {
                         if(todo_.id == todo.id) {
@@ -63,7 +63,7 @@ export default function Card({id, title, priority, until, repeat}) {
                     }));
                 }else {
                     toast.error("An error has occurred!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     });
                 }
             }else {
