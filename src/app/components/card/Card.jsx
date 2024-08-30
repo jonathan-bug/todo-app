@@ -17,12 +17,12 @@ export default function Card({id, title, priority, until, repeat}) {
 
             if(response.data.error == null) {
                 toast.success("Success!", {
-                    position: "top-right"
+                    position: "bottom-right"
                 });
                 main.setTodos(main.todos.filter(todo => todo.id != id));
             }else {
                 toast.error("An error has occurred!", {
-                    position: "top-right"
+                    position: "bottom-right"
                 });
             }
         }catch {
@@ -75,12 +75,12 @@ export default function Card({id, title, priority, until, repeat}) {
 
                 if(response.data.err == null) {
                     toast.success("Success", {
-                        position: "top-right"
+                        position: "bottom-right"
                     });
                     main.setTodos(main.todos.filter(todo => todo.id != id));
                 }else {
                     toast.error("An error has occurred!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     });
                 }
             }

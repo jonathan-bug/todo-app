@@ -28,13 +28,13 @@ export default function Form() {
                 
                 if(response.data.err == null) {
                     toast.success("Success!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     })
                     main.setTodos([...main.todos, {...main.todo, id: response.data.id}]);
                     main.setTodo({id: "", title: "", priority: "A", until: "", repeat: false});
                 }else {
                     toast.error("An error has occurred!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     })
                 }
             }else {
@@ -46,7 +46,7 @@ export default function Form() {
 
                 if(response.data.err == null) {
                     toast.success("Success!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     })
                     main.setTodos(main.todos.map(todo => {
                         if(todo.id == main.todo.id) {
@@ -58,7 +58,7 @@ export default function Form() {
                     main.setTodo({id: "", title: "", priority: "A", until: "", repeat: false});
                 }else {
                     toast.error("An error has occurred!", {
-                        position: "top-right"
+                        position: "bottom-right"
                     })
                 }
             }

@@ -62,7 +62,7 @@ export default function Page() {
                                     router.push("/");
                                 }else {
                                     toast.error("Username or password incorrent", {
-                                        position: "top-right"
+                                        position: "bottom-right"
                                     });
                                 }
                             }}>Login</button>
