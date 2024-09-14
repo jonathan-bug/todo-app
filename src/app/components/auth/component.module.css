@@ -1,0 +1,8 @@
+.auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(102deg, rgba(254, 253, 205, 1) 11.2%, rgb(204 235 221) 91.1%);
+}

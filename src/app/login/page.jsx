@@ -5,18 +5,34 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles from "@/app/login/page.module.css";
 import styles2 from "@/app/components/form/component.module.css";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+// login page
 export default function Page() {
     const router = useRouter();
     const [user, setUser] = useState({
         username: "",
         password: ""
     });
-    
+
+    useEffect(() => {
+        (async () => {
+            const token = localStorage.getItem("token");
+            const res = await axios.post("/api/auth", {}, {
+                headers: {
+                    Authorization: "Bearer: " + token
+               } 
+            });
+
+            const newToken = await res.data.token;
+
+            if(newToken != null) {
+                router.push("/");
+            }
+        })();
+    }, []);
     return (
-        
         <div className={styles.container}>
             <form>
                 <div className={`${styles2.form} ${styles.form_}`}>

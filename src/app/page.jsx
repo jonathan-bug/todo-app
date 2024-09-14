@@ -7,30 +7,13 @@ import Form from "./components/form/Form";
 import Card from "@/app/components/card/Card";
 import { useRef, useState, useEffect, createContext } from "react";
 import axios from "axios";
+import Auth from "@/app/components/auth/Auth";
 import { useRouter } from "next/navigation";
-
-// auth the token
-export async function auth(router, setLogged) {
-    const token = localStorage.getItem("token");
-    const res = await axios.post("/api/auth", {}, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    })
-
-    const token_ = await res.data.token
-    if(token_ == null) {
-        router.push("/login")
-    }else {
-        localStorage.setItem("token", token_)
-        setLogged(true)
-    }
-}
 
 export const Main = createContext(null);
 
+// app page
 export default function Page() {
-    const [logged, setLogged] = useState(false);
     const [todos, setTodos] = useState([]);
     const [todo, setTodo] = useState({
         id: "",
@@ -38,11 +21,9 @@ export default function Page() {
         priority: "A",
         until: "",
         repeat: false
-    })
+    });
+    const router = useRouter();
     
-    const router = useRouter()
-    auth(router, setLogged)
-
     useEffect(() => {
         (async () => {
             try {
@@ -65,10 +46,9 @@ export default function Page() {
     const [layoutLeftStyle, setLayoutLeftStyle] = useState(`${styles.layout__left}`);
     const [cardStyle, setCardStyle] = useState("grid-y grid-y-sm-6 grid-y-md-4 grid-y-xl-3");
 
-    if(logged) {
-        return (
+    return (
+        <Auth>
             <Main.Provider value={{ todos, setTodos, todo, setTodo }} >
-                
                 <div className={styles.layout}>
                     <div className={layoutLeftStyle}>
                         <Form/>
@@ -117,14 +97,6 @@ export default function Page() {
                 </div>
                 <ToastContainer/>
             </Main.Provider>
-        );
-    }else {
-        return (
-            <div style={{
-                backgroundImage: "linear-gradient(102deg, rgba(254, 253, 205, 1) 11.2%, rgb(204 235 221) 91.1%)",
-                height: "100%",
-            }}>
-            </div>
-        )
-    }
+        </Auth>
+    );
 }
