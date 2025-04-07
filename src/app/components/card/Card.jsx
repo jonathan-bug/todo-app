@@ -7,6 +7,10 @@ import { Main } from "@/app/page";
 export default function Card({id, title, priority, until, repeat}) {
     const main = useContext(Main);
 
+    console.log(until)
+    console.log((new Date()))
+    console.log()
+
     async function deleteTodo(id) {
         try {
             const response = await axios.delete("/api/tasks/" + id, {
@@ -108,6 +112,9 @@ export default function Card({id, title, priority, until, repeat}) {
                     width: "100%"
                 }}>
                     <button className={styles.card__button}
+                            style={{
+                                backgroundColor: ((new Date()).toISOString().split("T")[0]) == until? "#545479":"#60c4ae"
+                            }}
                             onClick={doneTodo}>
                         <img alt="" src="/bx-check-2.svg"/>
                     </button>
